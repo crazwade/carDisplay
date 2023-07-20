@@ -1,5 +1,7 @@
 <template>
-  <el-container>
+  <el-container
+    :direction="'vertical'"
+  >
     <router-view />
   </el-container>
 </template>
