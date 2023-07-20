@@ -3,56 +3,16 @@
     header
   </el-header>
   <el-main>
-    <el-row :gutter="20">
-      <el-col
-        v-for="(item, index) in data"
-        :key="index"
-        :span="isCancelSpan ? 24 : 12"
-        class="py-[10px]"
-      >
-        <el-card
-          :body-style="{ padding: '0px' }"
-        >
-          <el-carousel
-            ref="carousel"
-            arrow="always"
-            :autoplay="false"
-            :indicator-position="'none'"
-          >
-            <el-carousel-item
-              v-for="(info, index2) in item.imgs"
-              :key="index2"
-            >
-              <img
-                :src="info.src"
-                class="image w-full h-full object-cover"
-              >
-            </el-carousel-item>
-          </el-carousel>
-          <div style="padding: 14px">
-            <div>
-              <h2>{{ item.name }}</h2>
-            </div>
-            <div class=" py-[10px]">
-              <span>{{ item.time }}</span>
-            </div>
-            <div class="bottom">
-              <el-button
-                type="info"
-                class="button"
-              >
-                詳細資訊
-              </el-button>
-            </div>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
+    <CardItem
+      :is-cancel-span="isCancelSpan"
+      :data="data"
+    />
   </el-main>
 </template>
 
 <script setup lang='ts'>
 import { ref, onMounted } from 'vue';
+import CardItem from './component/CardItem.vue';
 
 const isCancelSpan = ref(false);
 // 偵測視窗大小變化，並重新渲染內容
@@ -104,7 +64,7 @@ const data = [
     ]
   },
   {
-    name: 'John',
+    name: 'John2',
     time: new Date(),
     imgs: [
       {
@@ -119,7 +79,7 @@ const data = [
     ]
   },
   {
-    name: 'John',
+    name: 'John3',
     time: new Date(),
     imgs: [
       {
@@ -134,7 +94,7 @@ const data = [
     ]
   },
   {
-    name: 'John',
+    name: 'John4',
     time: new Date(),
     imgs: [
       {
