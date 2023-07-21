@@ -6,7 +6,7 @@
           v-model="name"
           type="text"
           placeholder=" "
-          class="w-10 h-10 rounded-full border-3 border-black transition-all focus:w-72 focus:outline-none focus:border-black"
+          class="w-10 h-10 rounded-full border-3 border-black transition-all focus:w-72 focus:outline-none focus:border-black cursor-pointer"
           @input="handleInputChange"
         >
         <button
