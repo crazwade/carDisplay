@@ -1,4 +1,9 @@
 <template>
+  <DialogView
+    :is-visible="isVisible"
+    :dislog-data="dislogData"
+    @close="dialogClose"
+  />
   <el-row :gutter="20">
     <div
       v-if="data.length === 0"
@@ -17,7 +22,7 @@
     <el-col
       v-for="(item, index) in data"
       :key="index"
-      :span="isCancelSpan || data.length === 1 ? 24 : 12"
+      :span="spanRWD"
       class="py-[10px]"
     >
       <el-card
@@ -43,13 +48,22 @@
           <div>
             <h2>{{ item.name }}</h2>
           </div>
-          <div class=" py-[10px]">
-            <span>{{ item.time }}</span>
+          <div class=" py-[10px] flex justify-center items-center">
+            <el-icon
+              color="#cd7f32"
+              size="24"
+            >
+              <Money />
+            </el-icon>
+            <span class=" ml-5">
+              {{ Number(item.cost).toLocaleString() }}
+            </span>
           </div>
           <div class="bottom">
             <el-button
               type="info"
               class="button"
+              @click="dialogOpen(item)"
             >
               詳細資訊
             </el-button>
@@ -61,14 +75,40 @@
 </template>
 
 <script setup lang='ts'>
+import { ref } from 'vue';
+import DialogView from '@/components/DialogView.vue';
+
+type DataType = {
+  name: string,
+  cost: string,
+  imgs: Array<{ src: string }>,
+}
+
 defineProps<{
-  data: Array<{
-    name: string,
-    time: Date,
-    imgs: Array<{ src: string }>,
-  }>,
-  isCancelSpan: boolean,
+  data: Array<DataType>,
+  spanRWD: number,
 }>();
+
+const isVisible = ref(false);
+const dislogData = ref<DataType>({
+  name: '',
+  cost: '',
+  imgs: [
+    {
+      src: ''
+    }
+  ]
+});
+
+const dialogClose = () => {
+  isVisible.value = false;
+};
+
+const dialogOpen = (obj: DataType) => {
+  isVisible.value = true;
+  dislogData.value = obj;
+};
+
 </script>
 
 <style lang="scss" scoped>
