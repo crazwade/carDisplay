@@ -36,61 +36,204 @@ import { ref, onMounted, reactive } from 'vue';
 import CardItem from './component/CardItem.vue';
 import SearchBar from './component/SearchBar.vue';
 
-type DataList = {
-  name: string,
-  cost: string,
-  imgs: Array<{ src: string }>,
-}[];
+export type DataList = {
+  name: string;
+  cost: string;
+  imgs: Array<{ src: string }>;
+  info: {
+    fuelConsumption: string;
+    ReversingSystem: string;
+    Keyless: string;
+    AutoHold: string;
+    Digitalnstrument: string;
+    LaneDepartureWarning: string;
+    ActiveSteeringHeadlights: string;
+    AutomaticSwitchingLightL: string;
+    SeatMaterial: string;
+  };
+};
 
-const originData: DataList = [
+const originData: DataList[] = [
   {
-    name: 'Jacky',
-    cost: '20500000',
+    name: 'Skoda Fabia 豪華動能版',
+    cost: '869000',
     imgs: [
       {
-        src: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+        src: 'https://assets-eu-01.kc-usercontent.com/3b3d460e-c5ae-0195-6b86-3ac7fb9d52db/d3fcc747-b0be-4b17-b8b4-43642700e780/Skoda%20Fabia%20%2818%29.jpg',
       },
       {
-        src: 'data:image/jpeg;base64,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'
+        src: 'https://cpv3prodbluecdnep.azureedge.net/images3/sites/zhtw-v2/15910551-a3cc-4f8c-99e0-e4c8222c1b3e/810b8738418bbcb0e1c3ef489232d80a/ModelCharacterGalleryModule/7632a1f0aa516594d6a0e94356eefae7250acf63669750b30971a08237c5496b/Default_bp1200_1.webp',
       },
       {
-        src: 'data:image/jpeg;base64,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'
+        src: 'https://cpv3prodbluecdnep.azureedge.net/images3/sites/zhtw-v2/f2a3d74b-47ef-4d47-9403-de3f9b55ade8/9de64bc4e99430fe0b73b1bcb904fe2f/ModelCharacterGalleryModule/7632a1f0aa516594d6a0e94356eefae7250acf63669750b30971a08237c5496b/Default_bp1200_1.webp'
       },
-    ]
+      {
+        src: 'https://cpv3prodbluecdnep.azureedge.net/images3/sites/zhtw-v2/b89bba47-94cb-44c3-9c95-5e6b33275814/7cb2304e810863341a6e0b49a5298565/ModelCharacterGalleryModule/7632a1f0aa516594d6a0e94356eefae7250acf63669750b30971a08237c5496b/Default_bp1200_1.webp',
+      },
+      {
+        src: 'https://cpv3prodbluecdnep.azureedge.net/images3/sites/zhtw-v2/a8a824a5-57db-4e21-8266-2a6ff90408fa/ec51602960aeb883108c9df269baa86a/ModelCharacterGalleryModule/7632a1f0aa516594d6a0e94356eefae7250acf63669750b30971a08237c5496b/Default_bp1200_1.webp'
+      }
+    ],
+    info: {
+      fuelConsumption: '19.2',
+      ReversingSystem: '有',
+      Keyless: '有',
+      AutoHold: '沒有',
+      Digitalnstrument: '10.25吋',
+      LaneDepartureWarning: '沒有',
+      ActiveSteeringHeadlights: '有',
+      AutomaticSwitchingLightL: '有',
+      SeatMaterial: '皮布雙織'
+    }
   },
   {
-    name: 'John',
-    cost: '18500000',
+    name: 'Skoda Kamiq 豪華動能版',
+    cost: '979000',
     imgs: [
       {
-        src: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+        src: 'https://cpv3prodbluecdnep.azureedge.net/images3/sites/zhtw-v2/6d435135-23ec-4ba9-a236-ca94a9b59c41/e9ec7f8b6dd3481087e8aab14b996f01/ModelCharacterGalleryModule/7632a1f0aa516594d6a0e94356eefae7250acf63669750b30971a08237c5496b/Default_bp1200_1.webp',
       },
       {
-        src: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png'
+        src: 'https://cpv3prodbluecdnep.azureedge.net/images3/sites/zhtw-v2/73dec42d-5a2c-4da4-aabb-c243a20d1c21/ed02b0b7eeb7a891a9e898fd758d87cb/ModelCharacterGalleryModule/7632a1f0aa516594d6a0e94356eefae7250acf63669750b30971a08237c5496b/Default_bp1200_1.webp',
       },
       {
-        src: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png'
+        src: 'https://cpv3prodbluecdnep.azureedge.net/images3/sites/zhtw-v2/a49854ef-cb8c-4cf0-b6e8-ca6af6a4cc19/b3780fbff25fa959b65027f8aa428d57/ModelCharacterGalleryModule/7632a1f0aa516594d6a0e94356eefae7250acf63669750b30971a08237c5496b/Default_bp1200_1.webp'
+      },
+      {
+        src: 'https://cpv3prodbluecdnep.azureedge.net/images3/sites/zhtw-v2/8f0fddb2-f9be-4f42-9311-713e8eb092a0/a8ea0bf64fa8d756dedcb9e15db1c715/ModelCharacterGalleryModule/7632a1f0aa516594d6a0e94356eefae7250acf63669750b30971a08237c5496b/Default_bp1200_1.webp',
+      },
+      {
+        src: 'https://cpv3prodbluecdnep.azureedge.net/images3/sites/zhtw-v2/c9f151f2-f7ea-4d44-b59c-efd93b9ca8f9/037583e86915e9139ea57171640d1df4/ModelCharacterGalleryModule/7632a1f0aa516594d6a0e94356eefae7250acf63669750b30971a08237c5496b/Default_bp1200_1.webp'
       }
-    ]
+    ],
+    info: {
+      fuelConsumption: '16.8',
+      ReversingSystem: '有',
+      Keyless: '有',
+      AutoHold: '沒有',
+      Digitalnstrument: '10.25吋',
+      LaneDepartureWarning: '有',
+      ActiveSteeringHeadlights: '沒有',
+      AutomaticSwitchingLightL: '沒有',
+      SeatMaterial: '真皮'
+    }
   },
   {
-    name: 'John2',
-    cost: '35500000',
+    name: 'Skoda Scala 豪華動能版',
+    cost: '979000',
     imgs: [
       {
-        src: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png',
+        src: 'https://cpv3prodbluecdnep.azureedge.net/images3/sites/zhtw-v2/8ed9cfe8-ceed-411b-a254-5dfabfffd7ea/549f3fcd17ed569b55dc70a938dad7f5/ModelCharacterGalleryModule/7632a1f0aa516594d6a0e94356eefae7250acf63669750b30971a08237c5496b/Default_bp1200_1.webp',
       },
       {
-        src: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png'
+        src: 'https://cpv3prodbluecdnep.azureedge.net/images3/sites/zhtw-v2/811bf86d-a00d-4659-919b-dee8ba10a20a/2c97db5056ec6d97283b2f18f5845a64/ModelCharacterGalleryModule/7632a1f0aa516594d6a0e94356eefae7250acf63669750b30971a08237c5496b/Default_bp1200_1.webp'
       },
       {
-        src: 'https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png'
+        src: 'https://cpv3prodbluecdnep.azureedge.net/images3/sites/zhtw-v2/63ecded9-29a0-47a0-a907-1bc8b7c2a098/5184ed03e2fe6ccf456a021939789d53/ModelCharacterGalleryModule/7632a1f0aa516594d6a0e94356eefae7250acf63669750b30971a08237c5496b/Default_bp1200_1.webp'
+      },
+      {
+        src: 'https://cpv3prodbluecdnep.azureedge.net/images3/sites/zhtw-v2/dd4c17af-be8a-4fc8-866a-fef13251a50c/c88fec63729a1fe1c46af27e11f319d8/ModelCharacterGalleryModule/7632a1f0aa516594d6a0e94356eefae7250acf63669750b30971a08237c5496b/Default_bp1200_1.webp'
       }
-    ]
+    ],
+    info: {
+      fuelConsumption: '16.4',
+      ReversingSystem: '有',
+      Keyless: '有',
+      AutoHold: '沒有',
+      Digitalnstrument: '10.25吋',
+      LaneDepartureWarning: '有',
+      ActiveSteeringHeadlights: '沒有',
+      AutomaticSwitchingLightL: '沒有',
+      SeatMaterial: '真皮'
+    }
+  },
+  {
+    name: 'MG HS 旗艦版',
+    cost: '915000',
+    imgs: [
+      {
+        src: 'https://autos.yahoo.com.tw/p/r/w880/car-trim/July2022/e07454adb5e0131144c39118de8ab90a.jpeg',
+      },
+      {
+        src: 'https://autos.yahoo.com.tw/p/r/w1200/car-trim/July2022/917cd2c5aadde0659ec5a6656c5caa1c.jpeg'
+      },
+      {
+        src: 'https://autos.yahoo.com.tw/p/r/w1200/car-trim/July2022/31c5fd2b7fddac77c7596e0ab2ff09a9.jpeg'
+      }
+    ],
+    info: {
+      fuelConsumption: '13.5',
+      ReversingSystem: '有',
+      Keyless: '有',
+      AutoHold: '有',
+      Digitalnstrument: '12.3吋',
+      LaneDepartureWarning: '有',
+      ActiveSteeringHeadlights: '沒有',
+      AutomaticSwitchingLightL: '有',
+      SeatMaterial: '皮革'
+    }
+  },
+  {
+    name: 'Volkswagen Polo TSI Style',
+    cost: '958000',
+    imgs: [
+      {
+        src: 'https://assets.volkswagen.com/is/image/volkswagenag/polo-MQB?Zml0PWNyb3AsMSZmbXQ9d2VicCZxbHQ9Nzkmd2lkPTk2MCZoZWk9NzIwJmFsaWduPTAuMDAsMC4wMCZiZmM9b2ZmJjBhMDQ=',
+      },
+      {
+        src: 'https://autos.yahoo.com.tw/p/r/w880/car-trim/November2021/9e92070b50ebca1bebb2a0a6e6004dac.jpeg'
+      },
+      {
+        src: 'https://autos.yahoo.com.tw/p/r/w1200/car-trim/November2021/ed44587298f75db3f68b1cbb9cce0105.jpeg'
+      },
+      {
+        src: 'https://autos.yahoo.com.tw/p/r/w1200/car-trim/November2021/cef63668c704c6eca9b41b58313f5d83.jpeg'
+      }
+    ],
+    info: {
+      fuelConsumption: '19.0',
+      ReversingSystem: '有',
+      Keyless: '有',
+      AutoHold: '沒有',
+      Digitalnstrument: '8吋',
+      LaneDepartureWarning: '有',
+      ActiveSteeringHeadlights: '沒有',
+      AutomaticSwitchingLightL: '有',
+      SeatMaterial: '織布'
+    }
+  },
+  {
+    name: 'Volkswagen T-Cross TSI Life',
+    cost: '988000',
+    imgs: [
+      {
+        src: 'https://autos.yahoo.com.tw/p/r/w1200/car-trim/November2019/e31e43f8cd076d45bc8382481f3ff7bb.jpeg',
+      },
+      {
+        src: 'https://autos.yahoo.com.tw/p/r/w1200/car-trim/November2019/e7ac678bb54a0894956e416e1a0956c1.jpeg'
+      },
+      {
+        src: 'https://autos.yahoo.com.tw/p/r/w1200/car-trim/November2019/7ec0950e12ac7a52ad7c2958f06428d6.jpeg'
+      },
+      {
+        src: 'https://autos.yahoo.com.tw/p/r/w1200/car-trim/November2021/cef63668c704c6eca9b41b58313f5d83.jpeg'
+      }
+    ],
+    info: {
+      fuelConsumption: '18.1',
+      ReversingSystem: '選配',
+      Keyless: '有',
+      AutoHold: '沒有',
+      Digitalnstrument: '8吋',
+      LaneDepartureWarning: '沒有',
+      ActiveSteeringHeadlights: '沒有',
+      AutomaticSwitchingLightL: '沒有',
+      SeatMaterial: '織布'
+    }
   },
 ];
 
-const data: DataList = reactive([]);
+const data: DataList[] = reactive([]);
 
 const spanRWD = ref<number>(24);
 

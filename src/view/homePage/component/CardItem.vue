@@ -46,7 +46,9 @@
         </el-carousel>
         <div style="padding: 14px">
           <div>
-            <h2>{{ item.name }}</h2>
+            <span class="text-xl">
+              {{ item.name }}
+            </span>
           </div>
           <div class=" py-[10px] flex justify-center items-center">
             <el-icon
@@ -77,34 +79,40 @@
 <script setup lang='ts'>
 import { ref } from 'vue';
 import DialogView from '@/components/DialogView.vue';
-
-type DataType = {
-  name: string,
-  cost: string,
-  imgs: Array<{ src: string }>,
-}
+import type { DataList } from '../HomePage.vue';
 
 defineProps<{
-  data: Array<DataType>,
+  data: Array<DataList>,
   spanRWD: number,
 }>();
 
 const isVisible = ref(false);
-const dislogData = ref<DataType>({
+const dislogData = ref<DataList>({
   name: '',
   cost: '',
   imgs: [
     {
       src: ''
     }
-  ]
+  ],
+  info: {
+    fuelConsumption: '',
+    ReversingSystem: '',
+    Keyless: '',
+    AutoHold: '',
+    Digitalnstrument: '',
+    LaneDepartureWarning: '',
+    ActiveSteeringHeadlights: '',
+    AutomaticSwitchingLightL: '',
+    SeatMaterial: '',
+  },
 });
 
 const dialogClose = () => {
   isVisible.value = false;
 };
 
-const dialogOpen = (obj: DataType) => {
+const dialogOpen = (obj: DataList) => {
   isVisible.value = true;
   dislogData.value = obj;
 };
@@ -112,5 +120,8 @@ const dialogOpen = (obj: DataType) => {
 </script>
 
 <style lang="scss" scoped>
-
+.spanTitle {
+  font-family: inherit;
+  font-weight: bold;
+}
 </style>
